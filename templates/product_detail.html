@@ -1,0 +1,69 @@
+{% load static %}
+{% load product_filters %}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>{{ product.name }}</title>
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+
+
+<body>
+
+
+<div class="detail-card">
+
+
+<img src="{{ product.image.url }}" 
+class="detail-image">
+
+
+<div class="detail-info">
+
+
+<h1>
+{{ product.name|upper_text }}
+</h1>
+
+
+<h3>
+{{ product.brand|title_text }}
+</h3>
+
+
+<p>
+{{ product.description }}
+</p>
+
+
+<h2>
+{{ product.price|price_format }}
+</h2>
+
+
+<p>
+{{ product.available|product_status }}
+</p>
+
+
+<button>
+🛒 شراء الآن
+</button>
+
+
+</div>
+
+
+</div>
+
+
+</body>
+
+</html>

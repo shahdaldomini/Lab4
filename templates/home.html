@@ -1,0 +1,705 @@
+{% load static %}
+{% load product_filters %}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LUXORA</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+    LUXORA
+</div>
+
+<form method="GET">
+
+<input 
+type="text"
+name="search"
+placeholder="🔍 ابحث عن منتج..."
+value="{{ request.GET.search }}">
+
+<button type="submit">
+بحث
+</button>
+
+</form>
+
+<div class="account">
+
+{% if user.is_authenticated %}
+
+    <span>
+        مرحباً {{ user.username }}
+    </span>
+
+    <a href="{% url 'logout' %}">
+        خروج
+    </a>
+
+
+{% else %}
+
+    <a href="{% url 'login' %}">
+        دخول
+    </a>
+
+    <a href="{% url 'register' %}">
+        إنشاء حساب
+    </a>
+
+{% endif %}
+
+</div>
+
+    <ul>
+        <li><a href="#">الرئيسية</a></li>
+        <li><a href="#" onclick="showAllProducts()">المنتجات</a></li>
+        <li><a href="#categories">الأقسام</a></li>
+        <li><a href="#" onclick="showFavorites()">المفضلة ❤️</a></li>
+        <li><a href="#" onclick="showCart()">السلة 🛒</a></li>
+    </ul>
+
+</nav>
+
+
+</div>
+
+</section>
+
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>LUXORA</h1>
+
+        <p>
+            Luxury Collection
+            <br>
+            Timeless Elegance
+        </p>
+
+        <a href="#categories">
+            Explore Collection
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<header>
+
+    <h1>LUXORA</h1>
+
+    <p>
+        Luxury Collection
+    </p>
+
+</header>
+
+
+
+<!-- الأقسام -->
+
+<div class="categories" id="categories">
+
+    <button onclick="showCategory('watches')">
+    <span class="icon">⌚</span> Watches
+</button>
+
+<button onclick="showCategory('rings')">
+    <span class="icon">💍</span> Rings
+</button>
+
+<button onclick="showCategory('scarves')">
+    <span class="icon">🧣</span> Scarves
+</button>
+
+</div>
+
+<section id="all-products" class="product-section">
+
+<h2>جميع المنتجات</h2>
+
+<div class="products">
+
+{% for product in all_products %}
+
+<div class="card" data-id="{{ product.id }}">
+
+<img class="product-image"
+src="{{ product.image.url }}"
+alt="{{ product.name }}">
+
+<h2>{{ product.name|upper_text }}</h2>
+
+<p>{{ product.brand|title_text }}</p>
+
+<p>{{ product.description|short_description }}</p>
+
+<p>{{ product.price|price_format }}</p>
+
+<p>{{ product.available|product_status }}</p>
+
+<a href="{% url 'product_detail' product.id %}">
+<button>عرض التفاصيل</button>
+</a>
+
+<button class="fav-btn" onclick="addFavorite('{{ product.id }}')">
+    ❤️ إضافة للمفضلة
+
+<button class="cart-btn" onclick="addCart('{{ product.id }}')">
+    🛒 إضافة للسلة
+
+</button>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</section>
+
+
+
+<!-- الساعات -->
+
+<section id="watches" class="product-section" id="products">
+
+<h2>⌚ Watches</h2>
+
+
+<div class="products">
+
+
+{% for product in watches %}
+
+
+<div class="card">
+
+
+<img class="product-image"
+src="{{ product.image.url }}"
+alt="{{ product.name }}">
+
+
+<h2>
+{{ product.name|upper_text }}
+</h2>
+
+
+<p>
+{{ product.brand|title_text }}
+</p>
+
+
+<p>
+{{ product.description|short_description }}
+</p>
+
+
+<p>
+{{ product.price|price_format }}
+</p>
+
+
+<p>
+{{ product.available|product_status }}
+</p>
+
+
+<a href="{% url 'product_detail' product.id %}">
+<button>
+عرض التفاصيل
+</button>
+</a>
+
+<button class="fav-btn" onclick="addFavorite('{{ product.id }}')">
+    ❤️ إضافة للمفضلة
+</button>
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</section>
+
+<!-- الخواتم -->
+
+
+<section id="rings" class="product-section">
+
+
+<h2>💍  Rings</h2>
+
+
+<div class="products">
+
+
+{% for product in rings %}
+
+
+<div class="card">
+
+
+<img class="product-image"
+src="{{ product.image.url }}"
+alt="{{ product.name }}">
+
+
+<h2>
+{{ product.name|upper_text }}
+</h2>
+
+
+<p>
+{{ product.brand|title_text }}
+</p>
+
+
+<p>
+{{ product.description|short_description }}
+</p>
+
+
+<p>
+{{ product.price|price_format }}
+</p>
+
+
+<p>
+{{ product.available|product_status }}
+</p>
+
+
+<a href="{% url 'product_detail' product.id %}">
+<button>
+عرض التفاصيل
+</button>
+</a>
+
+<button class="fav-btn" onclick="addFavorite('{{ product.id }}')">
+    ❤️ إضافة للمفضلة
+</button>
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</section>
+
+<!-- السكارفات -->
+
+
+<section id="scarves" class="product-section">
+
+
+<h2>🧣 Scarves</h2>
+
+
+<div class="products">
+
+
+{% for product in scarves %}
+
+
+<div class="card">
+
+
+<img class="product-image"
+src="{{ product.image.url }}"
+alt="{{ product.name }}">
+
+
+<h2>
+{{ product.name|upper_text }}
+</h2>
+
+
+<p>
+{{ product.brand|title_text }}
+</p>
+
+<p>
+{{ product.description|short_description }}
+</p>
+
+<p>
+{{ product.price|price_format }}
+</p>
+
+<p>
+{{ product.available|product_status }}
+</p>
+
+<a href="{% url 'product_detail' product.id %}">
+    <button>
+        عرض التفاصيل
+    </button>
+</a>
+
+<button class="fav-btn" onclick="addFavorite('{{ product.id }}')">
+    ❤️ إضافة للمفضلة
+</button>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</section>
+
+
+<section id="favorites" class="product-section">
+
+<h2>❤️ المفضلة</h2>
+
+<div class="products" id="favorite-products">
+
+</div>
+</section>
+
+<section id="cart" class="product-section">
+
+<h2>🛒 السلة</h2>
+
+<div class="products" id="cart-products">
+
+</div>
+
+</section>
+
+<script>
+
+function hideAllSections() {
+    let sections = document.querySelectorAll('.product-section');
+    sections.forEach(function(section) {
+        section.style.display = "none";
+    });
+}
+
+function showCategory(category) {
+    hideAllSections();
+    document.getElementById(category).style.display = "block";
+}
+
+function showAllProducts(){
+
+    let sections = document.querySelectorAll('.product-section');
+
+    sections.forEach(function(section){
+        section.style.display = "none";
+    });
+
+    let products = document.getElementById("all-products");
+
+    products.style.display = "block";
+
+    products.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+function addFavorite(id){
+
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if(!favorites.includes(id)){
+
+        favorites.push(id);
+
+        localStorage.setItem(
+            "favorites",
+            JSON.stringify(favorites)
+        );
+
+        alert("تمت الإضافة إلى المفضلة ❤️");
+
+    }else{
+
+        alert("المنتج موجود في المفضلة ❤️");
+
+    }
+
+}
+
+function showFavorites(){
+
+    let sections = document.querySelectorAll('.product-section');
+
+    sections.forEach(function(section){
+        section.style.display = "none";
+    });
+
+
+    let fav = document.getElementById("favorites");
+    fav.style.display = "block";
+
+
+    let saved = JSON.parse(localStorage.getItem("favorites")) || [];
+
+
+    let container = document.getElementById("favorite-products");
+
+
+    container.innerHTML = "";
+
+
+    if(saved.length === 0){
+
+        container.innerHTML = "<h3>لا توجد منتجات في المفضلة ❤️</h3>";
+
+    } else {
+
+
+        saved.forEach(function(id){
+
+            let product = document.querySelector(
+                '.card[data-id="' + id + '"]'
+            );
+
+
+            if(product){
+
+                let favoriteCard = product.outerHTML;
+
+
+                favoriteCard = favoriteCard
+                .replace(
+                    "addFavorite",
+                    "removeFavorite"
+                )
+                .replace(
+                    "❤️ إضافة للمفضلة",
+                    "❌ إزالة"
+                );
+
+
+                container.innerHTML += favoriteCard;
+
+            }
+
+        });
+
+    }
+
+
+    fav.scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+function removeFavorite(id){
+
+    let saved = JSON.parse(localStorage.getItem("favorites")) || [];
+
+
+    saved = saved.filter(function(item){
+
+        return item != id;
+
+    });
+
+
+    localStorage.setItem(
+        "favorites",
+        JSON.stringify(saved)
+    );
+
+
+    showFavorites();
+
+} 
+
+function addCart(id){
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+
+    if(!cart.includes(id)){
+
+        cart.push(id);
+
+        localStorage.setItem(
+            "cart",
+            JSON.stringify(cart)
+        );
+
+        alert("تمت الإضافة إلى السلة 🛒");
+
+    }else{
+
+        alert("المنتج موجود في السلة 🛒");
+
+    }
+
+}
+
+
+
+function showCart(){
+
+    let sections = document.querySelectorAll('.product-section');
+
+    sections.forEach(function(section){
+        section.style.display = "none";
+    });
+
+
+    let cartSection = document.getElementById("cart");
+
+    cartSection.style.display = "block";
+
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+
+    let container = document.getElementById("cart-products");
+
+    container.innerHTML = "";
+
+
+    if(cart.length === 0){
+
+        container.innerHTML = "<h3>السلة فارغة 🛒</h3>";
+        return;
+
+    }
+
+
+    cart.forEach(function(id){
+
+        let product = document.querySelector(
+            '.card[data-id="' + id + '"]'
+        );
+
+
+        if(product){
+
+            let cartCard = product.cloneNode(true);
+
+
+            // حذف زر إضافة للمفضلة
+            let favButton = cartCard.querySelector(".fav-btn");
+            if(favButton){
+                favButton.remove();
+            }
+
+
+            // حذف زر إضافة للسلة
+            let cartButton = cartCard.querySelector(".cart-btn");
+            if(cartButton){
+                cartButton.remove();
+            }
+
+
+            // إنشاء زر إزالة
+            let removeButton = document.createElement("button");
+
+            removeButton.innerHTML = "إزالة";
+
+            removeButton.onclick = function(){
+                removeCart(id);
+            };
+
+
+            cartCard.appendChild(removeButton);
+
+
+            container.appendChild(cartCard);
+
+        }
+
+    });
+
+
+    cartSection.scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+function removeCart(id){
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+
+    cart = cart.filter(function(item){
+
+        return item != id;
+
+    });
+
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+
+    showCart();
+
+}
+
+</script>
+
+<script>
+
+window.onload = function(){
+
+    let params = new URLSearchParams(window.location.search);
+
+    let search = params.get("search");
+
+
+    if(search){
+
+        let products = document.getElementById("all-products");
+
+
+        if(products){
+
+            products.style.display = "block";
+
+
+            products.scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+            });
+
+        }
+
+    }
+
+}
+
+</script>
+
+</body>
+ </html>
